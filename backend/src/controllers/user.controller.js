@@ -72,6 +72,31 @@ export const getProfile = async (req, res) => {
 };
 
 
+export const logoutUser = async (req, res) => {
+  try {
+    const userId = req.user?._id;
+
+    if (!userId) {
+      return res.status(401).json({ error: "Unauthorized" });
+    }
+
+    // Clear refreshToken from DB
+    await User.findByIdAndUpdate(userId, { $unset: { refreshToken: "" } });
+
+    // Clear cookie if used (adjust name if different)
+    res.clearCookie("refreshToken", {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "strict"
+    });
+
+    return res.status(200).json({ message: "Logged out successfully" });
+  } catch (error) {
+    console.error("❌ Logout Error:", error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+};
+
 
 
 
