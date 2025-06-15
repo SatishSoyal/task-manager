@@ -38,4 +38,4 @@ const taskSchema = new mongoose.Schema(
 );
 
 // Export with the correct name
-export const taskModel = mongoose.model("Class", taskSchema);
+export const taskModel = mongoose.model("task", taskSchema);
